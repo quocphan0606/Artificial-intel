@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# kích thước ảnh
+h, w = 256, 256
+
+# ảnh ít chi tiết (gradient mượt)
+smooth_img = np.tile(np.linspace(0, 255, w), (h,1))
+
+# ảnh nhiều chi tiết (noise texture)
+detail_img = np.random.randint(0,256,(h,w))
+
+# hàm giảm số mức xám
+def reduce_levels(img, levels):
+    factor = 256 // levels
+    return (img // factor) * factor
+
+levels_list = [256,64,16,4]
+
+plt.figure(figsize=(10,8))
+
+for i, levels in enumerate(levels_list):
+
+    # giảm mức xám
+    smooth = reduce_levels(smooth_img, levels)
+    detail = reduce_levels(detail_img, levels)
+
+    plt.subplot(4,2,2*i+1)
+    plt.imshow(smooth, cmap='gray')
+    plt.title(f"Smooth Image ({levels} levels)")
+    plt.axis('off')
+
+    plt.subplot(4,2,2*i+2)
+    plt.imshow(detail, cmap='gray')
+    plt.title(f"Detail Image ({levels} levels)")
+    plt.axis('off')
+
+plt.tight_layout()
+plt.show()
