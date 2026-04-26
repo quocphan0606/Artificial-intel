@@ -5,7 +5,7 @@ import time
 
 np.random.seed(42)
 
-# ===== Bật / tắt GPU =====
+# ===== Bật / tắt GPU ====
 USE_GPU = True   # đổi True / False để test
 
 device = torch.device("cuda" if USE_GPU and torch.cuda.is_available() else "cpu")
