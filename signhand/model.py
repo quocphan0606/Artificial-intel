@@ -1,3 +1,4 @@
+import datetime as dt
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -12,9 +13,11 @@ y_test = np.matrix(np.eye(10)[y_test])
 print("----------------------------------")
 print(x_train.shape)
 print(y_train.shape)
-import datetime as dt
+
+
 def sigmoid(x):
     return 1./(1.+np.exp(-x))
+
 def AccTest(outN,labels): 
     OutMaxArg=np.argmax(outN,axis=1)
     LabelMaxArg=np.argmax(labels,axis=1)
@@ -34,16 +37,35 @@ NumInput=784
 NumHidden=512
 NumOutput=10; # number of classes
 #Hidden layer
-Wh=np.matrix(np.random.uniform(-
-0.5,0.5,(NumHidden,NumInput)))
+'''Wh=np.matrix(np.random.uniform(-0.5,0.5,(512,NumInput)))
+
+
 bh= np.random.uniform(0,0.5,(1,NumHidden))
+
 dWh= np.zeros((NumHidden,NumInput))
+
 dbh= np.zeros((1,NumHidden))
+
 #Output layer
 Wo=np.random.uniform(-0.5,0.5,(NumOutput,NumHidden))
 bo= np.random.uniform(0,0.5,(1,NumOutput))
 dWo= np.zeros((NumOutput,NumHidden))
-dbo= np.zeros((1,NumOutput))
+dbo= np.zeros((1,NumOutput))'''
+Wh=np.matrix(np.random.uniform(-0.5,0.5,(512,784)))
+
+
+bh= np.random.uniform(0,0.5,(1,512))
+
+dWh= np.zeros((512,784))
+
+dbh= np.zeros((1,512))
+
+#Output layer
+Wo=np.random.uniform(-0.5,0.5,(10,512))
+bo= np.random.uniform(0,0.5,(1,10))
+dWo= np.zeros((10,512))
+dbo= np.zeros((1,10))
+
 # Train the network with back propagation,SGD
 SampleIdx=np.arange(NumOfTrainSample)
 t_start=t1=dt.datetime.now()
@@ -55,14 +77,18 @@ for ep in range(Epoch):
     for i in range(0,NumOfTrainSample):
         x=np.matrix(x_train[SampleIdx[i],:])
         y=np.matrix(y_train [SampleIdx[i],:])
+        
         # Feedforward propagation
         a=sigmoid(np.dot(x,Wh.T)+bh)
         o =sigmoid(np.dot(a,Wo.T)+bo)
         do=np.multiply(np.multiply(o,(1-o)),(y-o))
+        
         dWo=np.matrix(np.dot(do.T,a))
+        
         dbo=np.mean(do,0)
         Wo=Wo + learningRate*dWo
         bo=bo + learningRate*dbo
+        
         #back propagate error
         dh=np.multiply(np.dot(do,Wo),np.multiply(a,(1-a)))
         dWh=np.dot(dh.T,x)
